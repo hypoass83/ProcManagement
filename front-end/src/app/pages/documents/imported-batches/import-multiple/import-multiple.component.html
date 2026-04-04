@@ -1,0 +1,108 @@
+<!-- Main Modal -->
+<div *ngIf="open" class="fixed inset-0 bg-black/40 flex items-center justify-center z-50">
+  <div class="bg-white shadow-xl rounded-lg w-[850px] max-h-[90vh] overflow-hidden">
+
+    <!-- HEADER -->
+    <div class="p-4 border-b flex justify-between items-center">
+      <h2 class="font-bold text-lg">Import Multiple PDF Files</h2>
+      <button class="text-xl font-bold" (click)="closeModal()" [disabled]="uploading">×</button>
+    </div>
+
+    <!-- BODY -->
+    <div class="p-4 space-y-4 overflow-y-auto max-h-[70vh]">
+
+      <!-- INPUT FICHIERS -->
+      <input
+        type="file"
+        multiple
+        accept=".pdf"
+        (change)="onFilesSelected($event)"
+        class="ti-form-input border rounded p-2 w-full"
+        [disabled]="uploading"
+      />
+
+      <!-- STATS -->
+      <div *ngIf="files.length > 0" class="text-xs text-gray-600">
+        <span>{{ duplicateCount }} duplicate(s) skipped – </span>
+        <span>{{ validCount }} ready to import</span>
+      </div>
+
+      <!-- PROGRESSION GLOBALE -->
+      <div *ngIf="uploading && validCount > 0" class="space-y-1">
+        <div class="flex justify-between text-xs text-gray-600">
+          <span>Global progress</span>
+          <span>{{ overallProgress }}%</span>
+        </div>
+        <div class="w-full bg-gray-200 h-2 rounded">
+          <div class="bg-primary h-2 rounded" [style.width.%]="overallProgress"></div>
+        </div>
+      </div>
+
+      <!-- LISTE FICHIERS -->
+      <div *ngFor="let f of files" class="p-3 mb-2 border rounded"
+        [ngClass]="{
+          'bg-red-100 border-red-400': f.status === 'duplicate' || f.status === 'invalid',
+          'bg-green-100 border-green-400': f.status === 'waiting',
+          'bg-yellow-100 border-yellow-400': f.status === 'uploading',
+          'bg-blue-100 border-blue-400': f.status === 'done'
+        }">
+
+      <div class="flex justify-between font-semibold">
+        <span>{{ f.file.name }}</span>
+        <span>{{ (f.file.size / 1024) | number:'1.0-0' }} KB</span>
+      </div>
+
+      <!-- format affiché -->
+      <div *ngIf="f.status !== 'invalid' && f.status !== 'duplicate'" class="text-sm text-gray-600 ml-1">
+        📁 {{ f.decoded.year }} | {{ f.decoded.examCode }} | {{ f.decoded.center }} | batch {{ f.decoded.batch }}
+      </div>
+
+      <!-- déjà importé -->
+      <div *ngIf="f.status === 'duplicate'" class="text-sm text-red-600">
+        ⚠ Already imported — will be skipped
+      </div>
+
+      <!-- format incorrect -->
+      <div *ngIf="f.status === 'invalid'" class="text-sm text-red-600 font-medium">
+        ❌ Invalid format — skipped
+        <br>
+        Format expected: <strong>YEAR_EXAM_CENTER_BATCH.pdf</strong>
+      </div>
+
+      <!-- queued -->
+      <div *ngIf="f.status === 'waiting'" class="text-sm text-gray-600">
+        ⏳ Ready to import
+      </div>
+
+      <!-- uploading -->
+      <div *ngIf="f.status === 'uploading'" class="text-sm text-yellow-700">
+      📡 Uploading... {{ f.progress }}%
+    </div>
+      <!-- done -->
+      <div *ngIf="f.status === 'done'" class="text-sm text-green-700">
+        ✔ Completed
+      </div>
+      <div *ngIf="f.status === 'failed'" class="text-sm text-red-600">
+      ❌ Import failed — PDF unreadable
+      </div>
+    </div>
+
+
+    </div>
+
+    <!-- FOOTER -->
+    <div class="p-3 border-t flex justify-between items-center">
+      <button class="ti-btn ti-btn-light" (click)="closeModal()" [disabled]="uploading">
+        Close
+      </button>
+
+      <button
+        class="ti-btn ti-btn-primary"
+        (click)="uploadAll()"
+        [disabled]="!canUpload"
+      >
+        {{ uploading ? 'Uploading...' : 'Upload All' }}
+      </button>
+    </div>
+  </div>
+</div>
