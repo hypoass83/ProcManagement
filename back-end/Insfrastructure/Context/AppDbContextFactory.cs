@@ -4,9 +4,9 @@ using Microsoft.Extensions.Configuration;
 
 namespace Infrastructure.Context
 {
-    public class FsContextFactory : IDesignTimeDbContextFactory<FsContext>
+    public class AppDbContextFactory : IDesignTimeDbContextFactory<AppDbContext>
     {
-        public FsContext CreateDbContext(string[] args)
+        public AppDbContext CreateDbContext(string[] args)
         {
             var basePath = Path.Combine(Directory.GetCurrentDirectory(), "..", "WebAPI");
 
@@ -18,10 +18,10 @@ namespace Infrastructure.Context
 
             var connectionString = configuration.GetConnectionString("DefaultConnection");
 
-            var optionsBuilder = new DbContextOptionsBuilder<FsContext>();
+            var optionsBuilder = new DbContextOptionsBuilder<AppDbContext>();
             optionsBuilder.UseSqlServer(connectionString);
 
-            return new FsContext(optionsBuilder.Options);
+            return new AppDbContext(optionsBuilder.Options);
         }
     }
 }  

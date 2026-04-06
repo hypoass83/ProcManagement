@@ -1,5 +1,6 @@
 
 using Application.Interface.Security;
+using Infrastructure.Context.Repositories;
 using Infrastructure.Services.Security;
 using Microsoft.Extensions.DependencyInjection;
 
@@ -16,6 +17,7 @@ namespace Insfrastructure
 
             services.AddSingleton<IEncryptionService>(new EncryptionService());
 
+            services.AddScoped<IEmployeRepository, EmployeRepository>();
 
             services.AddHttpContextAccessor();
             return services;

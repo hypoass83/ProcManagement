@@ -12,7 +12,7 @@ namespace WebAPI.Extensions
     {
         public static IServiceCollection AddDatabaseContext(this IServiceCollection services, string connectionString)
         {
-            services.AddDbContext<FsContext>(options =>
+            services.AddDbContext<AppDbContext>(options =>
             {
                 options.UseLazyLoadingProxies()
                        .UseSqlServer(connectionString, sqlOptions =>
@@ -31,7 +31,7 @@ namespace WebAPI.Extensions
 
             try
             {
-                var context = services.GetRequiredService<FsContext>();
+                var context = services.GetRequiredService<AppDbContext>();
                 //await context.Database.MigrateAsync();
 
                 //var passwordHasher = services.GetRequiredService<IPasswordHasher<User>>();

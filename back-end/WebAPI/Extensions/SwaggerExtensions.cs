@@ -12,7 +12,7 @@ namespace WebAPI.Extensions
 
             services.AddSwaggerGen(swaggerGenOptions =>
             {
-                swaggerGenOptions.SwaggerDoc("v1", new OpenApiInfo { Title = "BCAPI", Version = "v1" });
+                swaggerGenOptions.SwaggerDoc("v1", new OpenApiInfo { Title = "PROCWMAPI", Version = "v1" });
 
                 // Define the BearerAuth scheme
                 swaggerGenOptions.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme

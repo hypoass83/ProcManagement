@@ -125,8 +125,9 @@ builder.Services.AddDatabaseContext(connectionString);
 // ========================================
 // Application Services & Infrastructure
 // ========================================
-builder.Services.AddInfrastructureStores();
 builder.Services.AddApplicationServices();
+builder.Services.AddInfrastructureStores();
+
 
 
 var app = builder.Build();
